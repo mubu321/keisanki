@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>計算機</title>
+  <style>
+    body {
+      background-color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #000;
+      width: 300px;
+    }
+
+    .display {
+      background-color: #111;
+      color: #0f0;
+      font-size: 2em;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: right;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      font-size: 1.5em;
+      padding: 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #555;
+      color: white;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #888;
+    }
+
+    button.operator {
+      background-color: #f57c00;
+    }
+
+    button.equal {
+      background-color: #4caf50;
+      grid-column: span 2;
+    }
+
+    button.clear {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button class="operator" onclick="press('/')">÷</button>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button class="operator" onclick="press('*')">×</button>
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button class="operator" onclick="press('-')">−</button>
+      <button onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+      <button class="equal" onclick="calculate()">＝</button>
+      <button class="operator" onclick="press('+')">＋</button>
+      <button class="clear" onclick="clearDisplay()">C</button>
+    </div>
+  </div>
+
+  <!-- 効果音 -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <audio id="resultSound" src="wrong.mp3" preload="auto"></audio>
+
+  <script>
+    let currentInput = '';
+
+    function press(value) {
+      playSound('clickSound');
+      currentInput += value;
+      document.getElementById('display').textContent = currentInput;
+    }
+
+    function clearDisplay() {
+      playSound('clickSound');
+      currentInput = '';
+      document.getElementById('display').textContent = '0';
+    }
+
+    function calculate() {
+      playSound('clickSound');
+      document.getElementById('display').textContent = '計算中...';
+
+      setTimeout(() => {
+        try {
+          const correctResult = eval(currentInput);
+          const chaos = correctResult + Math.floor(Math.random() * 100 - 50);
+          playSound('resultSound');
+          document.getElementById('display').textContent = chaos;
+          currentInput = '';
+        } catch (e) {
+          document.getElementById('display').textContent = 'エラー';
+          currentInput = '';
+        }
+      }, 1500);
+    }
+
+    function playSound(id) {
+      const sound = document.getElementById(id);
+      sound.currentTime = 0;
+      sound.play();
+    }
+  </script>
+
+</body>
+</html>
